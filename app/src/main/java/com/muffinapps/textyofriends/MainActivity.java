@@ -1,28 +1,40 @@
 package com.muffinapps.textyofriends;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        realm = Realm.getInstance(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(new MainRecyclerAdapter());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     @Override
@@ -47,21 +59,39 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class ContactHolder extends RecyclerView.ViewHolder {
+        public TextView mTitleTextView;;
 
+        public ContactHolder(View v) {
+            super(v);
+            mTitleTextView = (TextView) v.findViewById(R.id.txt2);
+        }
+    }
+
+    public class MainRecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
+
+//        private MessageRepository mMessageRepository;
+//        public MainRecyclerAdapter(MessageRepository repository) {
+//            mMessageRepository = repository;
+//        }
+//
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+        public ContactHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.
+                    from(parent.getContext()).
+                    inflate(R.layout.contact_row, parent, false);
+
+            return new ContactHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        public void onBindViewHolder(ContactHolder holder, int position) {
+            holder.mTitleTextView.setText("Hello World");
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return 1;
         }
     }
 }
