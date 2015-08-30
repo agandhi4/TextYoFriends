@@ -1,5 +1,6 @@
 package com.muffinapps.textyofriends;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,19 +11,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.muffinapps.textyofriends.dialogs.NewContactActivity;
+import com.muffinapps.textyofriends.models.Contact;
+
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.realm.RealmResults;
 
 public class MainActivity extends BaseActivity {
 
     @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
+    MainRecyclerAdapter adapater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
+        RealmResults<Contact> contacts = realm.where(Contact.class).findAll();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new MainRecyclerAdapter());
+        adapater = new MainRecyclerAdapter(contacts);
+        mRecyclerView.setAdapter(adapater);
     }
 
     @Override
@@ -47,6 +58,12 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.fab_add)
+    public void addContact() {
+        Intent intent = new Intent(this, NewContactActivity.class);
+        startActivity(intent);
+    }
+
     private class ContactHolder extends RecyclerView.ViewHolder {
         public TextView mTitleTextView;;
 
@@ -58,11 +75,11 @@ public class MainActivity extends BaseActivity {
 
     public class MainRecyclerAdapter extends RecyclerView.Adapter<ContactHolder> {
 
-//        private MessageRepository mMessageRepository;
-//        public MainRecyclerAdapter(MessageRepository repository) {
-//            mMessageRepository = repository;
-//        }
-//
+        private RealmResults<Contact> mContacts;
+        public MainRecyclerAdapter(RealmResults<Contact> contacts) {
+            mContacts = contacts;
+        }
+
         @Override
         public ContactHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.
@@ -74,12 +91,12 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ContactHolder holder, int position) {
-            holder.mTitleTextView.setText("Hello World");
+            holder.mTitleTextView.setText(mContacts.get(position).getName());
         }
 
         @Override
         public int getItemCount() {
-            return 1;
+            return mContacts.size();
         }
     }
 }

@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="new_contact_name_hint">New Contact Name</string>
+    <string name="new_contact_name">New Contact Name</string>
+    <string name="new_contact_name_add">Add Contact</string>
 </resources>
