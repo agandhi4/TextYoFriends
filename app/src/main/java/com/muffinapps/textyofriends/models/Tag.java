@@ -6,13 +6,13 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
- * Created by aakash on 8/28/15.
+ * Created by aakash on 8/29/15.
  */
-public class Contact extends RealmObject {
+public class Tag extends RealmObject {
     private Date createdAt;
     private Date updatedAt;
     private String name;
-    private RealmList<Tag> tags;
+    private RealmList<Contact> contacts;
 
     public Date getCreatedAt() {
         return createdAt;
@@ -38,13 +38,11 @@ public class Contact extends RealmObject {
         this.name = name;
     }
 
-    public RealmList<Tag> getTags() {
-        return tags;
+    public RealmList<Contact> getContacts() {
+        return contacts;
     }
 
-    public void setTags(RealmList<Tag> tags) {
-        this.tags = tags;
+    public void setContacts(RealmList<Contact> contacts) {
+        this.contacts = contacts;
     }
 }
-
-
